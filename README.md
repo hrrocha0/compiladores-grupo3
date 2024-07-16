@@ -58,7 +58,7 @@ flex -o source/lex.yy.c source/lexico.l
 ### Analisador Sintático
 
 ```bash
-`bison -o source/sintatico.tab.c -d source/sintatico.y`
+bison -o source/sintatico.tab.c -d source/sintatico.y
 ```
 
 ### Integração
@@ -72,7 +72,7 @@ gcc source/sintatico.tab.c source/lex.yy.c -o sintatico -lfl
 Para realizar a análise sintática de um arquivo de código fonte, pode ser usado o seguinde comando:
 
 ```bash
-./sintatico < input/$file}
+./sintatico < $file
 ```
 
 Por exemplo, executando o analisador para o arquivo de teste [teste.lua](/input/teste.lua):
