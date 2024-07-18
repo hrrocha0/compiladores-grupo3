@@ -84,3 +84,9 @@ Por exemplo, executando o analisador para o arquivo de teste [teste.lua](/input/
 É obtida a mensagem:
 
 `Programa sintaticamente correto!`
+
+## Referências
+
+- https://www.lua.org/manual/5.4/manual.html
+- https://www.olivroqueaprende.com/WDK/Lua.html
+- https://parrot.github.io/parrot-docs0/0.4.7/html/languages/lua/doc/lua51.bnf.html
