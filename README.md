@@ -6,27 +6,40 @@ O compilador desenvolvido é baseado na linguagem de programação [Lua](https:/
 
 ### Versão 1
 
-A primeira versão do analisador sintático incorpora os tokens reconhecidos pela primeira versão do [Analisador Léxico](source/lexico.l), incorporando o comando de atribuição a partir da seguinte gramática BNF, adaptada da gramática de exemplo dos *slides*:
+A primeira versão do analisador sintático incorpora os tokens reconhecidos pela primeira versão do [Analisador Léxico](source/lexico.l), a partir da seguinte gramática BNF, adaptada da gramática da linguagem Lua:
 
 ```bnf
-INICIO      ::= "begin"
-FIM         ::= "end"
-VARIAVEL    ::= [A-E]
-ATRIB       ::= ":="
-MAIS        ::= "+"
-MENOS       ::= "-"
-PONTUACAO   ::= ";"
-
-<programa> ::= INICIO <lista_comandos> FIM
+<programa> ::= <lista_comandos>
 
 <lista_comandos> ::= <comando>
-                   | <comando> PONTUACAO <lista_comandos>
+        | <comando> ";"
+        | <comando> <lista_comandos>
+        | <comando> ";" <lista_comandos>
 
-<comando> ::= VARIAVEL ATRIB <expressao>
+<comando> ::= <lista_identificadores> ";" <lista_expressoes>
+        | "local" <lista_identificadores> 
+        | "local" <lista_identificadores> "=" <lista_expressoes>
 
-<expressao> ::= VARIAVEL MAIS VARIAVEL
-              | VARIAVEL MENOS VARIAVEL
-              | VARIAVEL
+<lista_identificadores> ::= IDENTIFICADOR
+        | IDENTIFICADOR "," <lista_identificadores>
+
+<lista_expressoes> ::= <expressao>
+        | <expressao> "," <lista_expressoes>
+
+<expressao> ::= IDENTIFICADOR
+        | NUMERO
+        | STRING
+        | "nil"
+        | "false"
+        | "true"
+        | <expressao> "+" <expressao>
+        | <expressao> "-" <expressao>
+        | <expressao> "*" <expressao>
+        | <expressao> "/" <expressao>
+        | "not <expressao>
+        | <expressao> "and" <expressao>
+        | <expressao> "or" <expressao>
+        | "-" <expressao>
 ```
 
 ## Flex e Bison
@@ -52,19 +65,19 @@ A compilação pode ser realizada pelo Linux ou pelo Windows, caso o WSL esteja 
 ### Analisador Léxico
 
 ```bash
-flex -o source/lex.yy.c source/lexico.l
+flex -o build/lex.yy.c source/lexico.l
 ```
 
 ### Analisador Sintático
 
 ```bash
-bison -o source/sintatico.tab.c -d source/sintatico.y
+bison -o build/sintatico.tab.c -d source/sintatico.y
 ```
 
 ### Integração
 
 ```bash
-gcc source/sintatico.tab.c source/lex.yy.c -o sintatico -lfl
+gcc build/sintatico.tab.c build/lex.yy.c -o sintatico -lfl
 ```
 
 ## Execução
@@ -75,10 +88,10 @@ Para realizar a análise sintática de um arquivo de código fonte, pode ser usa
 ./sintatico < $file
 ```
 
-Por exemplo, executando o analisador para o arquivo de teste [teste.lua](/input/teste.lua):
+Por exemplo, executando o analisador para o arquivo de teste [teste_sintatico_sem_erros.lua](/tests/teste_sintatico_sem_erros.lua):
 
 ```bash
-./sintatico < input/teste.lua
+./sintatico < tests/teste_sintatico_sem_erros.lua
 ```
 
 É obtida a mensagem:

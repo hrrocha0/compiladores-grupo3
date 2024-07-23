@@ -35,8 +35,8 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_SOURCE_SINTATICO_TAB_H_INCLUDED
-# define YY_YY_SOURCE_SINTATICO_TAB_H_INCLUDED
+#ifndef YY_YY_BUILD_SINTATICO_TAB_H_INCLUDED
+# define YY_YY_BUILD_SINTATICO_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -54,13 +54,23 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    INICIO = 258,                  /* INICIO  */
-    FIM = 259,                     /* FIM  */
-    VARIAVEL = 260,                /* VARIAVEL  */
-    ATRIB = 261,                   /* ATRIB  */
-    MAIS = 262,                    /* MAIS  */
-    MENOS = 263,                   /* MENOS  */
-    PONTUACAO = 264                /* PONTUACAO  */
+    ATRIBUICAO = 258,              /* ATRIBUICAO  */
+    VIRGULA = 259,                 /* VIRGULA  */
+    PONTO_VIRGULA = 260,           /* PONTO_VIRGULA  */
+    NUMERO = 261,                  /* NUMERO  */
+    STRING = 262,                  /* STRING  */
+    NIL = 263,                     /* NIL  */
+    FALSO = 264,                   /* FALSO  */
+    VERDADEIRO = 265,              /* VERDADEIRO  */
+    LOCAL = 266,                   /* LOCAL  */
+    IDENTIFICADOR = 267,           /* IDENTIFICADOR  */
+    AND = 268,                     /* AND  */
+    OR = 269,                      /* OR  */
+    MAIS = 270,                    /* MAIS  */
+    MENOS = 271,                   /* MENOS  */
+    MULTIPLICACAO = 272,           /* MULTIPLICACAO  */
+    DIVISAO = 273,                 /* DIVISAO  */
+    NOT = 274                      /* NOT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -72,11 +82,25 @@ typedef int YYSTYPE;
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
+/* Location type.  */
+#if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
+typedef struct YYLTYPE YYLTYPE;
+struct YYLTYPE
+{
+  int first_line;
+  int first_column;
+  int last_line;
+  int last_column;
+};
+# define YYLTYPE_IS_DECLARED 1
+# define YYLTYPE_IS_TRIVIAL 1
+#endif
+
 
 extern YYSTYPE yylval;
-
+extern YYLTYPE yylloc;
 
 int yyparse (void);
 
 
-#endif /* !YY_YY_SOURCE_SINTATICO_TAB_H_INCLUDED  */
+#endif /* !YY_YY_BUILD_SINTATICO_TAB_H_INCLUDED  */
