@@ -5,4 +5,4 @@ flex -o build/lex.yy.c source/lexico.l
 bison -o build/sintatico.tab.c -d source/sintatico.y
 
 # Integração
-gcc build/sintatico.tab.c build/lex.yy.c -o sintatico -lfl
+gcc build/sintatico.tab.c build/lex.yy.c -o compilador -lfl

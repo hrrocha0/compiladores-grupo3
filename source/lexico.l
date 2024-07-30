@@ -1,16 +1,14 @@
 %{
 #include "sintatico.tab.h"
 
-int num_linha_atual = 1;
-int contar_linhas(const char *str);
+int current_line_number = 1;
+int count_lines(const char* str);
 %}
 
 numero                      [0-9]+(\.[0-9]+)?
-string_aspas_simples        \'([^\\\']|\\.)*\'
-string_aspas_duplas         \"([^\\\"]|\\.)*\"
 identificador               [a-zA-Z_][a-zA-Z0-9_]*
 comentario                  --[^\n]*
-comentario_multi_linhas     --\[\[(.|\n)*?--\]\]
+comentario_multi_linhas     --\[\[(.|\n)*?\]\]
 
 %%
 "-"                         { return MENOS; }
@@ -20,7 +18,6 @@ comentario_multi_linhas     --\[\[(.|\n)*?--\]\]
 "="                         { return ATRIBUICAO; }
 ","                         { return VIRGULA; }
 ";"                         { return PONTO_VIRGULA; }
-":"                         { return DOIS_PONTOS; }
 "("                         { return PARENTESE_ESQUERDO; }
 ")"                         { return PARENTESE_DIREITO; }
 "nil"                       { return NIL; }
@@ -30,15 +27,13 @@ comentario_multi_linhas     --\[\[(.|\n)*?--\]\]
 "or"                        { return OR; }
 "not"                       { return NOT; }
 "local"                     { return LOCAL; }
-{numero}                    { return NUMERO; }
-{string_aspas_simples}      { return STRING; }
-{string_aspas_duplas}       { return STRING; }
-{identificador}             { return IDENTIFICADOR; }
+{numero}                    { yylval.ival = atoi(yytext); return NUMERO; }
+{identificador}             { yylval.sval = yytext; return IDENTIFICADOR; }
 {comentario}                { ; }
-{comentario_multi_linhas}   { num_linha_atual += contar_linhas(yytext); }
-\n                          { num_linha_atual++; }
+{comentario_multi_linhas}   { current_line_number += count_lines(yytext); }
+[\r]*\n                     { current_line_number++; }
 [ \t]+                      { ; }
-.                           { printf("*** ERRO | LINHA %d: Token inválido: %s\n", num_linha_atual, yytext); exit(1); }
+.                           { printf("*** ERRO | LINHA %d: Token inválido: %s\n", current_line_number, yytext); exit(1); }
 %%
 
 int yywrap() {
@@ -46,19 +41,19 @@ int yywrap() {
 }
 
 void yyerror(const char *s) {
-    printf("*** ERRO | LINHA %d: %s\n", num_linha_atual, s);
+    printf("*** ERRO | LINHA %d: %s\n", current_line_number, s);
 }
 
-int contar_linhas(const char *str) {
-    int num_linhas = 0;
+int count_lines(const char* str) {
+    int line_count = 0;
 
     int i = 0;     
     while (yytext[i]) { 
         if (yytext[i] == '\n') { 
-            num_linhas++; 
+            line_count++; 
         } 
         i++; 
     }
 
-    return num_linhas;
+    return line_count;
 }

@@ -57,30 +57,38 @@ extern int yydebug;
     ATRIBUICAO = 258,              /* ATRIBUICAO  */
     VIRGULA = 259,                 /* VIRGULA  */
     PONTO_VIRGULA = 260,           /* PONTO_VIRGULA  */
-    DOIS_PONTOS = 261,             /* DOIS_PONTOS  */
-    PARENTESE_ESQUERDO = 262,      /* PARENTESE_ESQUERDO  */
-    PARENTESE_DIREITO = 263,       /* PARENTESE_DIREITO  */
-    NUMERO = 264,                  /* NUMERO  */
-    STRING = 265,                  /* STRING  */
-    NIL = 266,                     /* NIL  */
-    FALSO = 267,                   /* FALSO  */
-    VERDADEIRO = 268,              /* VERDADEIRO  */
-    LOCAL = 269,                   /* LOCAL  */
-    IDENTIFICADOR = 270,           /* IDENTIFICADOR  */
-    AND = 271,                     /* AND  */
-    OR = 272,                      /* OR  */
-    MAIS = 273,                    /* MAIS  */
-    MENOS = 274,                   /* MENOS  */
-    MULTIPLICACAO = 275,           /* MULTIPLICACAO  */
-    DIVISAO = 276,                 /* DIVISAO  */
-    NOT = 277                      /* NOT  */
+    PARENTESE_ESQUERDO = 261,      /* PARENTESE_ESQUERDO  */
+    PARENTESE_DIREITO = 262,       /* PARENTESE_DIREITO  */
+    NIL = 263,                     /* NIL  */
+    FALSO = 264,                   /* FALSO  */
+    VERDADEIRO = 265,              /* VERDADEIRO  */
+    LOCAL = 266,                   /* LOCAL  */
+    NUMERO = 267,                  /* NUMERO  */
+    IDENTIFICADOR = 268,           /* IDENTIFICADOR  */
+    AND = 269,                     /* AND  */
+    OR = 270,                      /* OR  */
+    MAIS = 271,                    /* MAIS  */
+    MENOS = 272,                   /* MENOS  */
+    MULTIPLICACAO = 273,           /* MULTIPLICACAO  */
+    DIVISAO = 274,                 /* DIVISAO  */
+    NOT = 275                      /* NOT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+union YYSTYPE
+{
+#line 16 "source/sintatico.y"
+
+    int ival;
+    char* sval;
+
+#line 89 "build/sintatico.tab.h"
+
+};
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif

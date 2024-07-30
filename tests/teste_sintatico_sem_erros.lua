@@ -1,10 +1,10 @@
 -- TESTE SINTATICO - PROGRAMA SEM ERROS
 
 x = 5;
-z = "Hello!"
+z = 20
 x, y = 10, 20
 x, y = 10;
-z, y = 1, ":)"
+z, y = 1, 1
 x = 1 y = 2
 
 local x;
@@ -21,5 +21,5 @@ w = 8 / 2;
 p = 8 * 2 + 4 * 5
 local r = a+b*c/2-x
 
-print "hello world"
+print(10 + 20 + 50)
 print(x, y)
