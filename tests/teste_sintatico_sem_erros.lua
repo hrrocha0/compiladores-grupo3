@@ -20,3 +20,6 @@ z = 6 * 7
 w = 8 / 2;
 p = 8 * 2 + 4 * 5
 local r = a+b*c/2-x
+
+print "hello world"
+print(x, y)

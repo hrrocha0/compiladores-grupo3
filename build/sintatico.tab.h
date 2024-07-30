@@ -57,20 +57,23 @@ extern int yydebug;
     ATRIBUICAO = 258,              /* ATRIBUICAO  */
     VIRGULA = 259,                 /* VIRGULA  */
     PONTO_VIRGULA = 260,           /* PONTO_VIRGULA  */
-    NUMERO = 261,                  /* NUMERO  */
-    STRING = 262,                  /* STRING  */
-    NIL = 263,                     /* NIL  */
-    FALSO = 264,                   /* FALSO  */
-    VERDADEIRO = 265,              /* VERDADEIRO  */
-    LOCAL = 266,                   /* LOCAL  */
-    IDENTIFICADOR = 267,           /* IDENTIFICADOR  */
-    AND = 268,                     /* AND  */
-    OR = 269,                      /* OR  */
-    MAIS = 270,                    /* MAIS  */
-    MENOS = 271,                   /* MENOS  */
-    MULTIPLICACAO = 272,           /* MULTIPLICACAO  */
-    DIVISAO = 273,                 /* DIVISAO  */
-    NOT = 274                      /* NOT  */
+    DOIS_PONTOS = 261,             /* DOIS_PONTOS  */
+    PARENTESE_ESQUERDO = 262,      /* PARENTESE_ESQUERDO  */
+    PARENTESE_DIREITO = 263,       /* PARENTESE_DIREITO  */
+    NUMERO = 264,                  /* NUMERO  */
+    STRING = 265,                  /* STRING  */
+    NIL = 266,                     /* NIL  */
+    FALSO = 267,                   /* FALSO  */
+    VERDADEIRO = 268,              /* VERDADEIRO  */
+    LOCAL = 269,                   /* LOCAL  */
+    IDENTIFICADOR = 270,           /* IDENTIFICADOR  */
+    AND = 271,                     /* AND  */
+    OR = 272,                      /* OR  */
+    MAIS = 273,                    /* MAIS  */
+    MENOS = 274,                   /* MENOS  */
+    MULTIPLICACAO = 275,           /* MULTIPLICACAO  */
+    DIVISAO = 276,                 /* DIVISAO  */
+    NOT = 277                      /* NOT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif

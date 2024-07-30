@@ -19,12 +19,15 @@ A primeira versão do analisador sintático incorpora os tokens reconhecidos pel
 <comando> ::= <lista_identificadores> ";" <lista_expressoes>
         | "local" <lista_identificadores> 
         | "local" <lista_identificadores> "=" <lista_expressoes>
+        | <chamada_funcao>
 
 <lista_identificadores> ::= IDENTIFICADOR
         | IDENTIFICADOR "," <lista_identificadores>
 
 <lista_expressoes> ::= <expressao>
         | <expressao> "," <lista_expressoes>
+
+<variavel> ::= IDENTIFICADOR
 
 <expressao> ::= IDENTIFICADOR
         | NUMERO
@@ -40,6 +43,18 @@ A primeira versão do analisador sintático incorpora os tokens reconhecidos pel
         | <expressao> "and" <expressao>
         | <expressao> "or" <expressao>
         | "-" <expressao>
+
+<chamada_funcao> ::= <expressao_prefixa> <argumentos>
+        | <expressao_prefixa> ":" IDENTIFICADOR <argumentos>
+
+<expressao_prefixa> ::= <variavel>
+        | <chamada_funcao>
+        | "(" <expressao> ")"
+
+<argumentos> ::= "()"
+        | "(" <lista_expressoes> ")"
+        | STRING
+
 ```
 
 ## Flex e Bison

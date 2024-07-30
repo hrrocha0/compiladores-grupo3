@@ -20,6 +20,9 @@ comentario_multi_linhas     --\[\[(.|\n)*?--\]\]
 "="                         { return ATRIBUICAO; }
 ","                         { return VIRGULA; }
 ";"                         { return PONTO_VIRGULA; }
+":"                         { return DOIS_PONTOS; }
+"("                         { return PARENTESE_ESQUERDO; }
+")"                         { return PARENTESE_DIREITO; }
 "nil"                       { return NIL; }
 "false"                     { return FALSO; }
 "true"                      { return VERDADEIRO; }
