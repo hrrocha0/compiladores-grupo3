@@ -8,6 +8,7 @@ int yylex(void);
 void yyerror(const char* s);
 
 bool in_print_call;
+bool read_call;
 
 extern FILE* yyin;
 extern FILE* yyout;
@@ -21,8 +22,8 @@ extern FILE* yyout;
 %locations
 %define parse.error verbose
 
-%token ATRIBUICAO VIRGULA PONTO_VIRGULA PARENTESE_ESQUERDO PARENTESE_DIREITO
-%token NIL FALSO VERDADEIRO LOCAL
+%token ATRIBUICAO VIRGULA PONTO_VIRGULA PARENTESE_ESQUERDO PARENTESE_DIREITO RETICENCIAS
+%token NIL FALSO VERDADEIRO LOCAL IF THEN ELSE ELSEIF DO END WHILE REPEAT UNTIL FOR IN FUNCTION
 %token <ival> NUMERO
 %token <sval> IDENTIFICADOR
 
@@ -47,9 +48,31 @@ lista_comandos:
 
 comando: 
     lista_identificadores ATRIBUICAO lista_expressoes
+    | DO lista_comandos END
+    | WHILE expressao DO lista_comandos END
+    | REPEAT lista_comandos UNTIL expressao
+    | IF expressao THEN lista_comandos END
+    | IF expressao THEN lista_comandos ELSE lista_comandos END
+    | IF expressao THEN lista_comandos lista_elseif END
+    | IF expressao THEN lista_comandos lista_elseif ELSE lista_comandos END
+    | FOR IDENTIFICADOR ATRIBUICAO expressao VIRGULA lista_expressoes DO lista_comandos END
+    | FOR lista_identificadores IN lista_expressoes DO lista_comandos END
+    | FUNCTION IDENTIFICADOR corpo_funcao
+    | LOCAL FUNCTION IDENTIFICADOR corpo_funcao
     | LOCAL lista_identificadores
     | LOCAL lista_identificadores ATRIBUICAO lista_expressoes
     | chamada_funcao
+    ;
+
+lista_elseif:
+    lista_elseif lista_elseif
+    | ELSEIF lista_comandos
+    ;
+
+lista_parametros:
+    lista_identificadores
+    | lista_identificadores VIRGULA RETICENCIAS
+    | RETICENCIAS
     ;
 
 lista_identificadores:
@@ -79,13 +102,17 @@ expressao:
     ;
 
 chamada_funcao:
-    IDENTIFICADOR { if (strcmp($1, "print")) in_print_call = true; } argumentos { in_print_call = false; }
+    IDENTIFICADOR { if (strcmp($1, "print")) in_print_call = true; if(strcmp($1, "read")) read_call = true; } argumentos { in_print_call = false; read_call = false; }
     ;
 
 argumentos:
     PARENTESE_ESQUERDO PARENTESE_DIREITO
     | PARENTESE_ESQUERDO lista_expressoes PARENTESE_DIREITO
     ;
+
+corpo_funcao:
+    PARENTESE_ESQUERDO PARENTESE_DIREITO lista_comandos END
+    | PARENTESE_ESQUERDO lista_parametros PARENTESE_DIREITO lista_comandos END
 %%
 
 int main(int argc, char* argv[]) {

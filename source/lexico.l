@@ -20,6 +20,7 @@ comentario_multi_linhas     --\[\[(.|\n)*?\]\]
 ";"                         { return PONTO_VIRGULA; }
 "("                         { return PARENTESE_ESQUERDO; }
 ")"                         { return PARENTESE_DIREITO; }
+"..."                       { return RETICENCIAS; }
 "nil"                       { return NIL; }
 "false"                     { return FALSO; }
 "true"                      { return VERDADEIRO; }
@@ -27,6 +28,18 @@ comentario_multi_linhas     --\[\[(.|\n)*?\]\]
 "or"                        { return OR; }
 "not"                       { return NOT; }
 "local"                     { return LOCAL; }
+"if"                        { return IF; }
+"then"                      { return THEN; }
+"else"                      { return ELSE; }
+"elseif"                    { return ELSEIF; }
+"do"                        { return DO; }
+"end"                       { return END; }
+"while"                     { return WHILE; }
+"repeat"                    { return REPEAT; }
+"until"                     { return UNTIL; }
+"for"                       { return FOR; }
+"in"                        { return IN; }
+"function"                  { return FUNCTION; }
 {numero}                    { yylval.ival = atoi(yytext); return NUMERO; }
 {identificador}             { yylval.sval = yytext; return IDENTIFICADOR; }
 {comentario}                { ; }

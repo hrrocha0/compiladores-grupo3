@@ -4,9 +4,9 @@ O compilador desenvolvido é baseado na linguagem de programação [Lua](https:/
 
 ## Analisador Sintático
 
-### Versão 1
+### Versão 2
 
-A primeira versão do analisador sintático incorpora os tokens reconhecidos pela primeira versão do [Analisador Léxico](source/lexico.l), a partir da seguinte gramática BNF, adaptada da gramática da linguagem Lua:
+A segunda versão do analisador sintático incorpora os tokens reconhecidos pela segunda versão do [Analisador Léxico](source/lexico.l), a partir da seguinte gramática BNF, adaptada da gramática da linguagem Lua:
 
 ```bnf
 <programa> ::= <lista_comandos>
@@ -17,9 +17,27 @@ A primeira versão do analisador sintático incorpora os tokens reconhecidos pel
         | <comando> ";" <lista_comandos>
 
 <comando> ::= <lista_identificadores> ";" <lista_expressoes>
+        | "do" <lista_comandos> "end"
+        | "while" <expressao> "do" <lista_comandos> "end"
+        | "repeat" <lista_comandos> "until" <expressao>
+        | "if" <expressao> "then" <lista_comandos>
+        | "if" <expressao> "then" <lista_comandos> "else" <lista_comandos>
+        | "if" <expressao> "then" <lista_comandos> <lista_elseif>
+        | "if" <expressao> "then" <lista_comandos> <lista_elseif> "else" <lista_comandos>
+        | "for" IDENTIFICADOR "=" <expressao> "," <lista_expressoes> "do" <lista_comandos> "end"
+        | "for" lista_identificadores "in" lista_expressoes "do" <lista_comandos> "end"
+        | "function" IDENTIFICADOR <corpo_funcao>
+        | "local" "function" IDENTIFICADOR <corpo_funcao>
         | "local" <lista_identificadores> 
         | "local" <lista_identificadores> "=" <lista_expressoes>
         | <chamada_funcao>
+
+<lista_elseif> ::= <lista_elseif> <lista_elseif>
+        | "elseif" <lista_comandos>
+
+<lista_parametros> ::= <lista_identificadores>
+        | <lista_identificadores> "," "..."
+        | "..."
 
 <lista_identificadores> ::= IDENTIFICADOR
         | IDENTIFICADOR "," <lista_identificadores>
@@ -47,6 +65,9 @@ A primeira versão do analisador sintático incorpora os tokens reconhecidos pel
 
 <argumentos> ::= "()"
         | "(" <lista_expressoes> ")"
+
+<corpo_funcao> ::= "()" <lista_comandos> "end"
+        | "(" <lista_parametros> ")" <lista_comandos> "end"
 
 ```
 

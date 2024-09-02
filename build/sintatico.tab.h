@@ -59,19 +59,32 @@ extern int yydebug;
     PONTO_VIRGULA = 260,           /* PONTO_VIRGULA  */
     PARENTESE_ESQUERDO = 261,      /* PARENTESE_ESQUERDO  */
     PARENTESE_DIREITO = 262,       /* PARENTESE_DIREITO  */
-    NIL = 263,                     /* NIL  */
-    FALSO = 264,                   /* FALSO  */
-    VERDADEIRO = 265,              /* VERDADEIRO  */
-    LOCAL = 266,                   /* LOCAL  */
-    NUMERO = 267,                  /* NUMERO  */
-    IDENTIFICADOR = 268,           /* IDENTIFICADOR  */
-    AND = 269,                     /* AND  */
-    OR = 270,                      /* OR  */
-    MAIS = 271,                    /* MAIS  */
-    MENOS = 272,                   /* MENOS  */
-    MULTIPLICACAO = 273,           /* MULTIPLICACAO  */
-    DIVISAO = 274,                 /* DIVISAO  */
-    NOT = 275                      /* NOT  */
+    RETICENCIAS = 263,             /* RETICENCIAS  */
+    NIL = 264,                     /* NIL  */
+    FALSO = 265,                   /* FALSO  */
+    VERDADEIRO = 266,              /* VERDADEIRO  */
+    LOCAL = 267,                   /* LOCAL  */
+    IF = 268,                      /* IF  */
+    THEN = 269,                    /* THEN  */
+    ELSE = 270,                    /* ELSE  */
+    ELSEIF = 271,                  /* ELSEIF  */
+    DO = 272,                      /* DO  */
+    END = 273,                     /* END  */
+    WHILE = 274,                   /* WHILE  */
+    REPEAT = 275,                  /* REPEAT  */
+    UNTIL = 276,                   /* UNTIL  */
+    FOR = 277,                     /* FOR  */
+    IN = 278,                      /* IN  */
+    FUNCTION = 279,                /* FUNCTION  */
+    NUMERO = 280,                  /* NUMERO  */
+    IDENTIFICADOR = 281,           /* IDENTIFICADOR  */
+    AND = 282,                     /* AND  */
+    OR = 283,                      /* OR  */
+    MAIS = 284,                    /* MAIS  */
+    MENOS = 285,                   /* MENOS  */
+    MULTIPLICACAO = 286,           /* MULTIPLICACAO  */
+    DIVISAO = 287,                 /* DIVISAO  */
+    NOT = 288                      /* NOT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -80,12 +93,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 16 "source/sintatico.y"
+#line 17 "source/sintatico.y"
 
     int ival;
     char* sval;
 
-#line 89 "build/sintatico.tab.h"
+#line 102 "build/sintatico.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
