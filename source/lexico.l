@@ -1,16 +1,22 @@
 %{
 #include "sintatico.tab.h"
 
-int current_line_number = 1;
+extern int current_line_number;
 int count_lines(const char* str);
 %}
+
+%state IN_COMMENT
 
 numero                      [0-9]+(\.[0-9]+)?
 identificador               [a-zA-Z_][a-zA-Z0-9_]*
 comentario                  --[^\n]*
-comentario_multi_linhas     --\[\[(.|\n)*?\]\]
 
 %%
+<INITIAL>"--[["             { BEGIN(IN_COMMENT); }
+<IN_COMMENT>"]]"            { BEGIN(INITIAL); }
+<IN_COMMENT>[^\]\n]+
+<IN_COMMENT>"]"
+<IN_COMMENT>\n              { current_line_number++; }
 "-"                         { return MENOS; }
 "+"                         { return MAIS; }
 "*"                         { return MULTIPLICACAO; }
@@ -20,13 +26,15 @@ comentario_multi_linhas     --\[\[(.|\n)*?\]\]
 ";"                         { return PONTO_VIRGULA; }
 "("                         { return PARENTESE_ESQUERDO; }
 ")"                         { return PARENTESE_DIREITO; }
-"..."                       { return RETICENCIAS; }
 "nil"                       { return NIL; }
 "false"                     { return FALSO; }
 "true"                      { return VERDADEIRO; }
 "and"                       { return AND; }
 "or"                        { return OR; }
 "not"                       { return NOT; }
+"<"                         { return MENOR_QUE; }
+">"                         { return MAIOR_QUE; }
+"=="                        { return IGUALDADE; }
 "local"                     { return LOCAL; }
 "if"                        { return IF; }
 "then"                      { return THEN; }
@@ -38,15 +46,12 @@ comentario_multi_linhas     --\[\[(.|\n)*?\]\]
 "repeat"                    { return REPEAT; }
 "until"                     { return UNTIL; }
 "for"                       { return FOR; }
-"in"                        { return IN; }
-"function"                  { return FUNCTION; }
 {numero}                    { yylval.ival = atoi(yytext); return NUMERO; }
-{identificador}             { yylval.sval = yytext; return IDENTIFICADOR; }
+{identificador}             { yylval.sval = strdup(yytext); return IDENTIFICADOR; }
 {comentario}                { ; }
-{comentario_multi_linhas}   { current_line_number += count_lines(yytext); }
 [\r]*\n                     { current_line_number++; }
 [ \t]+                      { ; }
-.                           { printf("*** ERRO | LINHA %d: Token inválido: %s\n", current_line_number, yytext); exit(1); }
+.                           { printf("*** ERRO LÉXICO | LINHA %d: Token inválido: '%s'\n", current_line_number, yytext); exit(1); }
 %%
 
 int yywrap() {
@@ -54,7 +59,7 @@ int yywrap() {
 }
 
 void yyerror(const char *s) {
-    printf("*** ERRO | LINHA %d: %s\n", current_line_number, s);
+    printf("*** ERRO SINTÁTICO | LINHA %d: %s\n", current_line_number, s);
 }
 
 int count_lines(const char* str) {

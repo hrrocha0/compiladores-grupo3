@@ -1,5 +1,7 @@
 -- TESTE GERACAO DE CODIGO - Comando print
 
+a, b = 0, 0
+
 print(34)
 print(-10)
 print(-10, 5, 10)

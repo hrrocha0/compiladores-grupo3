@@ -59,25 +59,25 @@ extern int yydebug;
     PONTO_VIRGULA = 260,           /* PONTO_VIRGULA  */
     PARENTESE_ESQUERDO = 261,      /* PARENTESE_ESQUERDO  */
     PARENTESE_DIREITO = 262,       /* PARENTESE_DIREITO  */
-    RETICENCIAS = 263,             /* RETICENCIAS  */
-    NIL = 264,                     /* NIL  */
-    FALSO = 265,                   /* FALSO  */
-    VERDADEIRO = 266,              /* VERDADEIRO  */
-    LOCAL = 267,                   /* LOCAL  */
-    IF = 268,                      /* IF  */
-    THEN = 269,                    /* THEN  */
-    ELSE = 270,                    /* ELSE  */
-    ELSEIF = 271,                  /* ELSEIF  */
-    DO = 272,                      /* DO  */
-    END = 273,                     /* END  */
-    WHILE = 274,                   /* WHILE  */
-    REPEAT = 275,                  /* REPEAT  */
-    UNTIL = 276,                   /* UNTIL  */
-    FOR = 277,                     /* FOR  */
-    IN = 278,                      /* IN  */
-    FUNCTION = 279,                /* FUNCTION  */
-    NUMERO = 280,                  /* NUMERO  */
-    IDENTIFICADOR = 281,           /* IDENTIFICADOR  */
+    NIL = 263,                     /* NIL  */
+    FALSO = 264,                   /* FALSO  */
+    VERDADEIRO = 265,              /* VERDADEIRO  */
+    LOCAL = 266,                   /* LOCAL  */
+    IF = 267,                      /* IF  */
+    THEN = 268,                    /* THEN  */
+    ELSE = 269,                    /* ELSE  */
+    ELSEIF = 270,                  /* ELSEIF  */
+    DO = 271,                      /* DO  */
+    END = 272,                     /* END  */
+    WHILE = 273,                   /* WHILE  */
+    REPEAT = 274,                  /* REPEAT  */
+    UNTIL = 275,                   /* UNTIL  */
+    FOR = 276,                     /* FOR  */
+    NUMERO = 277,                  /* NUMERO  */
+    IDENTIFICADOR = 278,           /* IDENTIFICADOR  */
+    MENOR_QUE = 279,               /* MENOR_QUE  */
+    MAIOR_QUE = 280,               /* MAIOR_QUE  */
+    IGUALDADE = 281,               /* IGUALDADE  */
     AND = 282,                     /* AND  */
     OR = 283,                      /* OR  */
     MAIS = 284,                    /* MAIS  */
@@ -93,7 +93,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 17 "source/sintatico.y"
+#line 68 "source/sintatico.y"
 
     int ival;
     char* sval;
