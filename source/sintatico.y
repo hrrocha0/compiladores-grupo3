@@ -139,7 +139,7 @@ comando:
 variavel:
     IDENTIFICADOR
     { 
-        insert_variable($1, in_local_definition ? current_scope_level : 0 ); 
+        insert_variable($1, in_local_definition ? current_scope_level : 0, current_line_number++); 
         add_pending_variable($1);
         $$ = $1;
     }
@@ -265,6 +265,8 @@ int main(int argc, char* argv[]) {
     }
 
     yyparse();
+
+    verify_not_used_variables();
 
     fclose(yyin);
     fclose(yyout);
