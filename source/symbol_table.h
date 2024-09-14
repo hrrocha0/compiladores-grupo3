@@ -28,6 +28,7 @@ de escopos superiores, como 3, 4, etc.
 typedef struct variable {
     char* name;
     bool is_used;
+    int loc_code;
     unsigned int memory_position;
     unsigned int scope_level;
     struct variable* next;
@@ -51,7 +52,7 @@ variable* search_variable(char* name, unsigned int scope_level) {
     return NULL;
 }
 
-variable* insert_variable(char* name, unsigned int scope_level) {
+variable* insert_variable(char* name, unsigned int scope_level, int loc_code) {
     variable* existing_variable = search_variable(name, scope_level);
 
     if (existing_variable != NULL) {
@@ -62,6 +63,7 @@ variable* insert_variable(char* name, unsigned int scope_level) {
     new_variable->name = strdup(name);
     new_variable->memory_position = next_memory_position;
     new_variable->scope_level = scope_level;
+    new_variable->loc_code = loc_code;
 
     if (next_memory_position++ == MAX_MEM_POSITION) {
         printf("\n*** ERRO | GERAÇÃO DE CÓDIGO: Memória de dados insuficiente.\n\n");
@@ -73,6 +75,8 @@ variable* insert_variable(char* name, unsigned int scope_level) {
     return new_variable;
 }
 
+//podemos adicionar aqui uma checagem de se a variavel foi declarada mas nao usada, dentro do escopo
+// mas antes eh necessario entender melhor o codigo...
 void delete_variables_in_scope(unsigned int scope_level) {
     variable* current_var = head_var;
     variable* previous_var = NULL;
@@ -92,6 +96,15 @@ void delete_variables_in_scope(unsigned int scope_level) {
         }
 
         current_var = next_var;
+    }
+}
+
+void verify_not_used_variables() {
+    variable* current_var;
+    for(current_var = head_var; current_var != (variable *) 0; current_var = (variable *) current_var->next){
+        if(!current_var->is_used) {
+            printf("Warning: Simbolo '%s' na linha '%d' foi declarado mas nao utilizado.\n", current_var->name, current_var->loc_code);
+        }
     }
 }
 
