@@ -258,6 +258,8 @@ argumentos:
 corpo_funcao:
     PARENTESE_ESQUERDO PARENTESE_DIREITO lista_comandos END
     | PARENTESE_ESQUERDO lista_parametros PARENTESE_DIREITO lista_comandos END
+    | PARENTESE_ESQUERDO PARENTESE_DIREITO retorno END
+    | PARENTESE_ESQUERDO lista_parametros PARENTESE_DIREITO retorno END
     ;
 
 retorno:
