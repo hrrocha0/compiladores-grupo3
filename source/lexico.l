@@ -7,6 +7,7 @@ int count_lines(const char* str);
 
 %state IN_COMMENT
 
+string                      \"([^\\\n]|(\\.))*\"
 numero                      [0-9]+(\.[0-9]+)?
 identificador               [a-zA-Z_][a-zA-Z0-9_]*
 comentario                  --[^\n]*
@@ -49,6 +50,7 @@ comentario                  --[^\n]*
 "for"                       { return FOR; }
 "function"                  { return FUNCTION; }
 "return"                    { return RETURN; }
+{string}                    { yylval.sval = strdup(yytext); return STRING; }
 {numero}                    { yylval.ival = atoi(yytext); return NUMERO; }
 {identificador}             { yylval.sval = strdup(yytext); return IDENTIFICADOR; }
 {comentario}                { ; }

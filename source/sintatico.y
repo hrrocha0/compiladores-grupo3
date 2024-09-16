@@ -75,6 +75,7 @@ void exit_scope() {
 
 %token ATRIBUICAO VIRGULA PONTO_VIRGULA PARENTESE_ESQUERDO PARENTESE_DIREITO RETICENCIAS
 %token NIL FALSO VERDADEIRO LOCAL IF THEN ELSE ELSEIF DO END WHILE REPEAT UNTIL FOR FUNCTION RETURN
+%token <sval> STRING
 %token <ival> NUMERO
 %token <sval> IDENTIFICADOR
 
@@ -212,6 +213,7 @@ expressao:
             gen_variable_value(var);
         }
     }
+    | STRING                                    { /* Aqui você pode gerar o código para uma string */ }
     | NUMERO                                    { gen_num($1); }
     | FALSO                                     { gen_num(0); }
     | VERDADEIRO                                { gen_num(1); }
