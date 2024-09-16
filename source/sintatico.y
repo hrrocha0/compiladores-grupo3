@@ -138,8 +138,14 @@ comando:
         gen_for(search_variable($3, current_scope_level)); 
         exit_scope(); 
     }
-    | FUNCTION IDENTIFICADOR corpo_funcao
+    | FUNCTION IDENTIFICADOR corpo_funcao 
+    {
+        insert_variable($2, in_local_definition ? current_scope_level : 0, current_line_number++); 
+    }
     | LOCAL FUNCTION IDENTIFICADOR corpo_funcao
+    {
+        insert_variable($3, in_local_definition ? current_scope_level : 0, current_line_number++); 
+    }
     ;
 
 variavel:
@@ -240,7 +246,20 @@ chamada_funcao:
             in_print_call = true; 
         } else if (strcmp($1, "read") == 0) {
             gen_read();
+        } else {
+            variable* var = search_variable($1, current_scope_level);
+
+            if (var == NULL) {
+                printf(
+                    "\n*** ERRO SEMÂNTICO | Linha %d: Função '%s' não foi declarada nesse escopo!\n", 
+                    current_line_number, $1
+                );
+                semantic_erros++;
+            } else {
+                var->is_used = true;
+            }
         }
+
     }
     argumentos 
     {
