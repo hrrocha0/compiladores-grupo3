@@ -24,6 +24,7 @@ comentario                  --[^\n]*
 "="                         { return ATRIBUICAO; }
 ","                         { return VIRGULA; }
 ";"                         { return PONTO_VIRGULA; }
+"..."                       { return RETICENCIAS; }
 "("                         { return PARENTESE_ESQUERDO; }
 ")"                         { return PARENTESE_DIREITO; }
 "nil"                       { return NIL; }
@@ -46,6 +47,8 @@ comentario                  --[^\n]*
 "repeat"                    { return REPEAT; }
 "until"                     { return UNTIL; }
 "for"                       { return FOR; }
+"function"                  { return FUNCTION; }
+"return"                    { return RETURN; }
 {numero}                    { yylval.ival = atoi(yytext); return NUMERO; }
 {identificador}             { yylval.sval = strdup(yytext); return IDENTIFICADOR; }
 {comentario}                { ; }

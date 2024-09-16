@@ -59,32 +59,35 @@ extern int yydebug;
     PONTO_VIRGULA = 260,           /* PONTO_VIRGULA  */
     PARENTESE_ESQUERDO = 261,      /* PARENTESE_ESQUERDO  */
     PARENTESE_DIREITO = 262,       /* PARENTESE_DIREITO  */
-    NIL = 263,                     /* NIL  */
-    FALSO = 264,                   /* FALSO  */
-    VERDADEIRO = 265,              /* VERDADEIRO  */
-    LOCAL = 266,                   /* LOCAL  */
-    IF = 267,                      /* IF  */
-    THEN = 268,                    /* THEN  */
-    ELSE = 269,                    /* ELSE  */
-    ELSEIF = 270,                  /* ELSEIF  */
-    DO = 271,                      /* DO  */
-    END = 272,                     /* END  */
-    WHILE = 273,                   /* WHILE  */
-    REPEAT = 274,                  /* REPEAT  */
-    UNTIL = 275,                   /* UNTIL  */
-    FOR = 276,                     /* FOR  */
-    NUMERO = 277,                  /* NUMERO  */
-    IDENTIFICADOR = 278,           /* IDENTIFICADOR  */
-    MENOR_QUE = 279,               /* MENOR_QUE  */
-    MAIOR_QUE = 280,               /* MAIOR_QUE  */
-    IGUALDADE = 281,               /* IGUALDADE  */
-    AND = 282,                     /* AND  */
-    OR = 283,                      /* OR  */
-    MAIS = 284,                    /* MAIS  */
-    MENOS = 285,                   /* MENOS  */
-    MULTIPLICACAO = 286,           /* MULTIPLICACAO  */
-    DIVISAO = 287,                 /* DIVISAO  */
-    NOT = 288                      /* NOT  */
+    RETICENCIAS = 263,             /* RETICENCIAS  */
+    NIL = 264,                     /* NIL  */
+    FALSO = 265,                   /* FALSO  */
+    VERDADEIRO = 266,              /* VERDADEIRO  */
+    LOCAL = 267,                   /* LOCAL  */
+    IF = 268,                      /* IF  */
+    THEN = 269,                    /* THEN  */
+    ELSE = 270,                    /* ELSE  */
+    ELSEIF = 271,                  /* ELSEIF  */
+    DO = 272,                      /* DO  */
+    END = 273,                     /* END  */
+    WHILE = 274,                   /* WHILE  */
+    REPEAT = 275,                  /* REPEAT  */
+    UNTIL = 276,                   /* UNTIL  */
+    FOR = 277,                     /* FOR  */
+    FUNCTION = 278,                /* FUNCTION  */
+    RETURN = 279,                  /* RETURN  */
+    NUMERO = 280,                  /* NUMERO  */
+    IDENTIFICADOR = 281,           /* IDENTIFICADOR  */
+    MENOR_QUE = 282,               /* MENOR_QUE  */
+    MAIOR_QUE = 283,               /* MAIOR_QUE  */
+    IGUALDADE = 284,               /* IGUALDADE  */
+    AND = 285,                     /* AND  */
+    OR = 286,                      /* OR  */
+    MAIS = 287,                    /* MAIS  */
+    MENOS = 288,                   /* MENOS  */
+    MULTIPLICACAO = 289,           /* MULTIPLICACAO  */
+    DIVISAO = 290,                 /* DIVISAO  */
+    NOT = 291                      /* NOT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -98,7 +101,7 @@ union YYSTYPE
     int ival;
     char* sval;
 
-#line 102 "build/sintatico.tab.h"
+#line 105 "build/sintatico.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

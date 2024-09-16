@@ -60,6 +60,7 @@ A segunda versão do analisador sintático incorpora os tokens reconhecidos pela
         | <expressao> "and" <expressao>
         | <expressao> "or" <expressao>
         | "-" <expressao>
+        | "(" <expressao> ")"
 
 <chamada_funcao> ::= IDENTIFICADOR <argumentos>
 
@@ -68,6 +69,11 @@ A segunda versão do analisador sintático incorpora os tokens reconhecidos pela
 
 <corpo_funcao> ::= "()" <lista_comandos> "end"
         | "(" <lista_parametros> ")" <lista_comandos> "end"
+        | "(" ")" <lista_comandos> <retorno_funcao> "end"
+        | "(" <lista_parametros> ")" <lista_comandos> <retorno_funcao> "end"
+
+<retorno_funcao> ::= "return"
+        | "return" <lista_expressoes>
 
 ```
 

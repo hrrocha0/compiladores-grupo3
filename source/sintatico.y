@@ -73,8 +73,8 @@ void exit_scope() {
 %locations
 %define parse.error verbose
 
-%token ATRIBUICAO VIRGULA PONTO_VIRGULA PARENTESE_ESQUERDO PARENTESE_DIREITO
-%token NIL FALSO VERDADEIRO LOCAL IF THEN ELSE ELSEIF DO END WHILE REPEAT UNTIL FOR
+%token ATRIBUICAO VIRGULA PONTO_VIRGULA PARENTESE_ESQUERDO PARENTESE_DIREITO RETICENCIAS
+%token NIL FALSO VERDADEIRO LOCAL IF THEN ELSE ELSEIF DO END WHILE REPEAT UNTIL FOR FUNCTION RETURN
 %token <ival> NUMERO
 %token <sval> IDENTIFICADOR
 
@@ -114,6 +114,9 @@ lista_comandos:
     | comando PONTO_VIRGULA
     | comando lista_comandos
     | comando PONTO_VIRGULA lista_comandos
+    | comando retorno
+    | comando lista_comandos retorno
+    | comando PONTO_VIRGULA lista_comandos retorno
     ;
 
 comando:
@@ -134,6 +137,8 @@ comando:
         gen_for(search_variable($3, current_scope_level)); 
         exit_scope(); 
     }
+    | FUNCTION IDENTIFICADOR corpo_funcao
+    | LOCAL FUNCTION IDENTIFICADOR corpo_funcao
     ;
 
 variavel:
@@ -179,6 +184,12 @@ lista_elseif:
     | comando_elseif                  { $$ = 1; }
     ;
 
+lista_parametros:
+    lista_variaveis
+    | lista_variaveis VIRGULA RETICENCIAS
+    | RETICENCIAS
+    ;
+
 lista_expressoes:
     expressao                                   { if (in_print_call) gen_print(); }
     | expressao VIRGULA lista_expressoes        { if (in_print_call) gen_print(); }
@@ -217,6 +228,7 @@ expressao:
     | MENOS expressao                           { gen_unary_operation(OP_NEG); }
     | NOT expressao                             { gen_unary_operation(OP_NOT); }
     | chamada_funcao                            { if (strcmp($1, "read") != 0) gen_num(0); }
+    | PARENTESE_ESQUERDO expressao PARENTESE_DIREITO
     ;
 
 chamada_funcao:
@@ -243,6 +255,15 @@ argumentos:
     | PARENTESE_ESQUERDO lista_expressoes PARENTESE_DIREITO
     ;
 
+corpo_funcao:
+    PARENTESE_ESQUERDO PARENTESE_DIREITO lista_comandos END
+    | PARENTESE_ESQUERDO lista_parametros PARENTESE_DIREITO lista_comandos END
+    ;
+
+retorno:
+    RETURN
+    | RETURN lista_expressoes
+    ;
 %%
 
 int main(int argc, char* argv[]) {
