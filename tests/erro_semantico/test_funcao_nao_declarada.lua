@@ -1,0 +1,1 @@
+minhaFuncao()  -- Erro: função 'minhaFuncao' não foi declarada
