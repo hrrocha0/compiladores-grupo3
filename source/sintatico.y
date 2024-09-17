@@ -11,6 +11,8 @@ void yyerror(const char* s);
 bool in_print_call;
 bool in_local_definition;
 
+extern char* function_definition_name;
+
 int semantic_erros;
 
 int current_line_number;
@@ -47,7 +49,7 @@ void add_pending_variable(char* name) {
 
 // Gera uma atribuição para a primeira variável pendente
 void gen_assignment_for_pending_var() {
-    gen_assignment(search_variable(first_pending_var->name, current_scope_level));
+    gen_assignment(search_symbol(first_pending_var->name, current_scope_level, false));
     
     pending_variable* next_var = first_pending_var->next;
     free(first_pending_var);
@@ -59,7 +61,7 @@ void enter_scope() {
 }
 
 void exit_scope() {
-    delete_variables_in_scope(current_scope_level);
+    delete_symbols_in_scope(current_scope_level);
     current_scope_level--;
 }
 
@@ -73,10 +75,10 @@ void exit_scope() {
 %locations
 %define parse.error verbose
 
-%token ATRIBUICAO VIRGULA PONTO_VIRGULA PARENTESE_ESQUERDO PARENTESE_DIREITO RETICENCIAS
-%token NIL FALSO VERDADEIRO LOCAL IF THEN ELSE ELSEIF DO END WHILE REPEAT UNTIL FOR FUNCTION RETURN
-%token <sval> STRING
+%token ATRIBUICAO VIRGULA PONTO_VIRGULA PARENTESE_ESQUERDO PARENTESE_DIREITO
+%token NIL FALSO VERDADEIRO LOCAL IF THEN ELSE ELSEIF DO END WHILE REPEAT UNTIL FOR FUNCTION
 %token <ival> NUMERO
+%token <sval> STRING
 %token <sval> IDENTIFICADOR
 
 %left MENOR_QUE MAIOR_QUE IGUALDADE
@@ -97,7 +99,7 @@ void exit_scope() {
 
 %%
 programa: 
-    lista_comandos 
+    lista_comandos_e_definicoes 
     { 
         printf("\nPrograma sintaticamente CORRETO!\n"); 
 
@@ -110,48 +112,65 @@ programa:
     }
     ;
 
+lista_comandos_e_definicoes:
+    comando
+    | comando PONTO_VIRGULA
+    | comando lista_comandos_e_definicoes
+    | comando PONTO_VIRGULA lista_comandos_e_definicoes
+    | definicao_funcao
+    | definicao_funcao PONTO_VIRGULA
+    | definicao_funcao lista_comandos_e_definicoes
+    | definicao_funcao PONTO_VIRGULA lista_comandos_e_definicoes
+    ;
+
 lista_comandos:
     comando
     | comando PONTO_VIRGULA
     | comando lista_comandos
     | comando PONTO_VIRGULA lista_comandos
-    | comando retorno
-    | comando lista_comandos retorno
-    | comando PONTO_VIRGULA lista_comandos retorno
     ;
 
 comando:
     lista_atribuicao
     | LOCAL { in_local_definition = true; } definicao_variavel { in_local_definition = false; } 
     | bloco_escopo
-    | WHILE { add_label(); } expressao { add_label(); skip_code_position(2); } bloco_escopo { gen_while(); }
-    | REPEAT { add_label(); enter_scope(); } lista_comandos { exit_scope(); } UNTIL expressao { gen_repeat(); }
+    | WHILE { save_code_position(); } expressao { save_code_position(); skip_code_position(2); } bloco_escopo { gen_while(); }
+    | REPEAT { save_code_position(); enter_scope(); } lista_comandos { exit_scope(); } UNTIL expressao { gen_repeat(); }
     | comando_condicional END { gen_if_end_jump($1); }
-    | chamada_funcao
     | FOR { in_local_definition = true; enter_scope(); } variavel ATRIBUICAO expressao VIRGULA
     { 
         gen_assignment_for_pending_var(); 
         in_local_definition = false; 
     } 
-    expressao VIRGULA expressao { add_label(); } bloco_escopo 
+    expressao VIRGULA expressao { save_code_position(); } bloco_escopo 
     { 
-        gen_for(search_variable($3, current_scope_level)); 
+        gen_for(search_symbol($3, current_scope_level, false)); 
         exit_scope(); 
     }
-    | FUNCTION IDENTIFICADOR corpo_funcao 
-    {
-        insert_variable($2, in_local_definition ? current_scope_level : 0, current_line_number++); 
-    }
-    | LOCAL FUNCTION IDENTIFICADOR corpo_funcao
-    {
-        insert_variable($3, in_local_definition ? current_scope_level : 0, current_line_number++); 
+    | chamada_funcao 
+    { 
+        if (strcmp($1, "print") != 0 && (strcmp($1, "read") != 0)) {
+            symbol* function = search_symbol($1, current_scope_level, true);
+
+            if (function == NULL) {
+                printf(
+                    "\n*** ERRO SEMÂNTICO | Linha %d: Função '%s' não foi declarada!\n", 
+                    current_line_number, $1
+                );
+                semantic_erros++;
+            } else {
+                function->is_used = true;
+
+                gen_function_code(strdup($1));
+            }
+        }
     }
     ;
 
 variavel:
     IDENTIFICADOR
     { 
-        insert_variable($1, in_local_definition ? current_scope_level : 0, current_line_number++); 
+        insert_symbol($1, in_local_definition ? current_scope_level : 0, current_line_number, false); 
         add_pending_variable($1);
         $$ = $1;
     }
@@ -179,22 +198,16 @@ comando_condicional:
     | comando_if lista_elseif ELSE { gen_if_exp_jump(); } lista_comandos  { $$ = 1 + $2; }
 
 comando_if:
-    IF expressao {  add_label(); skip_code_position(2); enter_scope(); } 
-        THEN lista_comandos { exit_scope(); add_label(); skip_code_position(1); }
+    IF expressao {  save_code_position(); skip_code_position(2); enter_scope(); } 
+        THEN lista_comandos { exit_scope(); save_code_position(); skip_code_position(1); }
 
 comando_elseif:
-    ELSEIF { gen_if_exp_jump(); } expressao { add_label(); skip_code_position(2); enter_scope(); } 
-        THEN lista_comandos { exit_scope(); add_label(); skip_code_position(1); }
+    ELSEIF { gen_if_exp_jump(); } expressao { save_code_position(); skip_code_position(2); enter_scope(); } 
+        THEN lista_comandos { exit_scope(); save_code_position(); skip_code_position(1); }
 
 lista_elseif:
     comando_elseif lista_elseif       { $$ = 1 + $2; }
     | comando_elseif                  { $$ = 1; }
-    ;
-
-lista_parametros:
-    lista_variaveis
-    | lista_variaveis VIRGULA RETICENCIAS
-    | RETICENCIAS
     ;
 
 lista_expressoes:
@@ -202,14 +215,31 @@ lista_expressoes:
     | expressao VIRGULA lista_expressoes        { if (in_print_call) gen_print(); }
     ;
 
+definicao_funcao:
+    FUNCTION IDENTIFICADOR PARENTESE_ESQUERDO PARENTESE_DIREITO 
+    {  
+        insert_symbol($2, in_local_definition ? current_scope_level : 0, current_line_number, true); 
+        save_code_position();
+        
+        enter_scope();
+        clear_function_code(strdup($2));
+        function_definition_name = strdup($2);
+    } lista_comandos END
+    {
+        exit_scope();
+        function_definition_name = NULL;
+        revert_code_position();
+    }
+    ;
+
 expressao: 
     IDENTIFICADOR
     { 
-        variable* var = search_variable($1, current_scope_level);
+        symbol* var = search_symbol($1, current_scope_level, false);
 
         if (var == NULL) {
             printf(
-                "\n*** ERRO SEMÂNTICO | Linha %d: Variável '%s' não foi declarada nesse escopo!\n", 
+                "\n*** ERRO SEMÂNTICO | Linha %d: Variável '%s' não foi declarada!\n", 
                 current_line_number, $1
             );
             semantic_erros++;
@@ -246,20 +276,7 @@ chamada_funcao:
             in_print_call = true; 
         } else if (strcmp($1, "read") == 0) {
             gen_read();
-        } else {
-            variable* var = search_variable($1, current_scope_level);
-
-            if (var == NULL) {
-                printf(
-                    "\n*** ERRO SEMÂNTICO | Linha %d: Função '%s' não foi declarada nesse escopo!\n", 
-                    current_line_number, $1
-                );
-                semantic_erros++;
-            } else {
-                var->is_used = true;
-            }
         }
-
     }
     argumentos 
     {
@@ -274,18 +291,6 @@ chamada_funcao:
 argumentos:
     PARENTESE_ESQUERDO PARENTESE_DIREITO
     | PARENTESE_ESQUERDO lista_expressoes PARENTESE_DIREITO
-    ;
-
-corpo_funcao:
-    PARENTESE_ESQUERDO PARENTESE_DIREITO lista_comandos END
-    | PARENTESE_ESQUERDO lista_parametros PARENTESE_DIREITO lista_comandos END
-    | PARENTESE_ESQUERDO PARENTESE_DIREITO retorno END
-    | PARENTESE_ESQUERDO lista_parametros PARENTESE_DIREITO retorno END
-    ;
-
-retorno:
-    RETURN
-    | RETURN lista_expressoes
     ;
 %%
 
@@ -310,7 +315,7 @@ int main(int argc, char* argv[]) {
 
     yyparse();
 
-    verify_not_used_variables();
+    verify_not_used_symbols();
 
     fclose(yyin);
     fclose(yyout);

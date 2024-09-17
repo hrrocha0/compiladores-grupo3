@@ -1,20 +1,21 @@
+local x = 10
+local y = 5
+local res = 0
+
 -- Função de somar (não utilizada)
-function somar(a, b)
-    return a + b
+function somar()
+    res = x + y
 end
 
 -- Função de multiplicar (usada no programa)
-function multiplicar(a, b)
-    return a * b
+function multiplicar()
+    res = x * y
 end
 
 -- Função principal que chama apenas a função de multiplicar
 function principal()
-    local x = 10
-    local y = 5
-
-    -- Chamando apenas a função multiplicar
-    print("Multiplicação: ", multiplicar(x, y))
+    multiplicar();
+    print(res);
 end
 
 -- Executando o programa principal

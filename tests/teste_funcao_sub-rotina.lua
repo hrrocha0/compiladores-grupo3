@@ -1,21 +1,25 @@
+-- Variáveis
+local x = read()
+local y = read()
+local res = 0
+
 -- Módulo 1: Função de somar
-function somar(a, b)
-    return a + b
+function somar()
+    res = x + y
 end
 
 -- Módulo 2: Função de multiplicar
-function multiplicar(a, b)
-    return a * b
+function multiplicar()
+    res = x * y
 end
 
 -- Módulo 3: Função principal que chama as outras
 function principal()
-    local x = 10
-    local y = 5
-
     -- Chamando as sub-rotinas
-    print("Soma: ", somar(x, y))
-    print("Multiplicação: ", multiplicar(x, y))
+    somar()
+    print(res)
+    multiplicar();
+    print(res)
 end
 
 -- Executando o programa principal

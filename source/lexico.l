@@ -13,7 +13,7 @@ identificador               [a-zA-Z_][a-zA-Z0-9_]*
 comentario                  --[^\n]*
 
 %%
-<INITIAL>"--[["             { BEGIN(IN_COMMENT); }
+<INITIAL>--\[\[\r?          { BEGIN(IN_COMMENT); }
 <IN_COMMENT>"]]"            { BEGIN(INITIAL); }
 <IN_COMMENT>[^\]\n]+
 <IN_COMMENT>"]"
@@ -25,7 +25,6 @@ comentario                  --[^\n]*
 "="                         { return ATRIBUICAO; }
 ","                         { return VIRGULA; }
 ";"                         { return PONTO_VIRGULA; }
-"..."                       { return RETICENCIAS; }
 "("                         { return PARENTESE_ESQUERDO; }
 ")"                         { return PARENTESE_DIREITO; }
 "nil"                       { return NIL; }
@@ -49,11 +48,10 @@ comentario                  --[^\n]*
 "until"                     { return UNTIL; }
 "for"                       { return FOR; }
 "function"                  { return FUNCTION; }
-"return"                    { return RETURN; }
-{string}                    { yylval.sval = strdup(yytext); return STRING; }
 {numero}                    { yylval.ival = atoi(yytext); return NUMERO; }
+{string}                    { yylval.sval = strdup(yytext); return STRING; }
 {identificador}             { yylval.sval = strdup(yytext); return IDENTIFICADOR; }
-{comentario}                { ; }
+{comentario}                { current_line_number++; }
 [\r]*\n                     { current_line_number++; }
 [ \t]+                      { ; }
 .                           { printf("*** ERRO LÉXICO | LINHA %d: Token inválido: '%s'\n", current_line_number, yytext); exit(1); }
