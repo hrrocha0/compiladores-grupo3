@@ -54,7 +54,7 @@ comentario                  --[^\n]*
 {comentario}                { current_line_number++; }
 [\r]*\n                     { current_line_number++; }
 [ \t]+                      { ; }
-.                           { printf("*** ERRO LÉXICO | LINHA %d: Token inválido: '%s'\n", current_line_number, yytext); exit(1); }
+.                           { printf("ERRO LÉXICO | LINHA %d: Token inválido: '%s'\n", current_line_number+1, yytext); exit(1); }
 %%
 
 int yywrap() {
@@ -62,7 +62,7 @@ int yywrap() {
 }
 
 void yyerror(const char *s) {
-    printf("*** ERRO SINTÁTICO | LINHA %d: %s\n", current_line_number, s);
+    printf("ERRO SINTÁTICO | LINHA %d: %s\n", current_line_number+1, s);
 }
 
 int count_lines(const char* str) {

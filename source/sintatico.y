@@ -154,8 +154,8 @@ comando:
 
             if (function == NULL) {
                 printf(
-                    "\n*** ERRO SEMÂNTICO | Linha %d: Função '%s' não foi declarada!\n", 
-                    current_line_number, $1
+                    "\nERRO SEMÂNTICO | Linha %d: Função '%s' não foi declarada!\n", 
+                    current_line_number+1, $1
                 );
                 semantic_erros++;
             } else {
@@ -239,8 +239,8 @@ expressao:
 
         if (var == NULL) {
             printf(
-                "\n*** ERRO SEMÂNTICO | Linha %d: Variável '%s' não foi declarada!\n", 
-                current_line_number, $1
+                "\nERRO SEMÂNTICO | Linha %d: Variável '%s' não foi declarada!\n", 
+                current_line_number+1, $1
             );
             semantic_erros++;
         } else {

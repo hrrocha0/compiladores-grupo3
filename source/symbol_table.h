@@ -73,7 +73,7 @@ symbol* insert_symbol(char* name, unsigned int scope_level, int loc_code, bool i
     }
 
     if (next_memory_position++ == MAX_MEM_POSITION) {
-        printf("\n*** ERRO | GERAÇÃO DE CÓDIGO: Memória de dados insuficiente.\n\n");
+        printf("\nERRO | GERAÇÃO DE CÓDIGO: Memória de dados insuficiente.\n\n");
     }
     
     new_symbol->next = head_symbol;
@@ -111,8 +111,8 @@ void verify_not_used_symbols() {
     for(current_symbol = head_symbol; current_symbol != (symbol *) 0; current_symbol = (symbol *) current_symbol->next){
         if(!current_symbol->is_used) {
             printf(
-                "Warning: %s '%s' na linha '%d' foi declarado mas nao utilizado.\n", 
-                current_symbol->is_function ? "Função" : "Variável", current_symbol->name, current_symbol->loc_code
+                "WARNING | %s '%s' na linha '%d' foi declarada mas não utilizada.\n", 
+                current_symbol->is_function ? "Função" : "Variável", current_symbol->name, current_symbol->loc_code+1
             );
         }
     }
